@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Countdown Timers</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f4f8;
+      text-align: center;
+    }
+
+    #countdown-box, #extension-countdown-box {
+      background-color: #333;
+      color: #fff;
+      padding: 20px 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      font-size: 24px;
+      margin-top: 20px;
+      animation: fadeIn 1s ease-out;
+    }
+
+    .countdown-label {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .countdown {
+      font-size: 40px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      animation: updateAnimation 1s ease-out;
+    }
+
+    .title {
+      font-size: 30px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #333;
+      text-transform: uppercase;
+    }
+
+    .extension {
+      font-size: 18px;
+      font-weight: normal;
+      color: #e74c3c;
+      margin-top: 5px;
+      text-transform: capitalize;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes updateAnimation {
+      0% {
+        transform: scale(1.1);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 600px) {
+      #countdown-box, #extension-countdown-box {
+        font-size: 20px;
+        padding: 15px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="title">TikTok Ban Countdown</div>
+<div class="extension">With a 90-day extension</div>
+
+<!-- Normal Countdown Timer -->
+<div id="countdown-box">
+  <div class="countdown-label">In:</div>
+  <div class="countdown" id="countdown-embed">00d 00h 00m 00s</div>
+</div>
+
+<!-- 90-Day Extension Countdown Timer -->
+<div id="extension-countdown-box">
+  <div class="countdown-label">With 90 Day Extension:</div>
+  <div class="countdown" id="extension-countdown-embed">00d 00h 00m 00s</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
+<script>
+  // Normal Countdown (Original Deadline)
+  var endDateEmbed = moment.tz("2025-01-19 23:59:59", "America/New_York").valueOf();
+
+  // 90-Day Extension Countdown (Starts after the original deadline)
+  var extensionEndDate = moment.tz("2025-01-19 23:59:59", "America/New_York").add(90, 'days').valueOf();
+
+  function updateCountdownEmbed() {
+    var now = moment().tz("America/New_York").valueOf();
+
+    // Normal countdown
+    var distance = endDateEmbed - now;
+    if (distance < 0) {
+      document.getElementById("countdown-box").innerHTML = "• The countdown has ended — the deadline has passed •";
+    } else {
+      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      document.getElementById("countdown-embed").innerHTML = 
+        (days < 10 ? "0" : "") + days + "d " + 
+        (hours < 10 ? "0" : "") + hours + "h " + 
+        (minutes < 10 ? "0" : "") + minutes + "m " + 
+        (seconds < 10 ? "0" : "") + seconds + "s";
+    }
+
+    // 90-Day Extension countdown
+    var extensionDistance = extensionEndDate - now;
+    if (extensionDistance < 0) {
+      document.getElementById("extension-countdown-box").innerHTML = "• The countdown has ended — the extension deadline has passed •";
+    } else {
+      var daysExtension = Math.floor(extensionDistance / (1000 * 60 * 60 * 24));
+      var hoursExtension = Math.floor((extensionDistance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutesExtension = Math.floor((extensionDistance % (1000 * 60 * 60)) / (1000 * 60));
+      var secondsExtension = Math.floor((extensionDistance % (1000 * 60)) / 1000);
+      document.getElementById("extension-countdown-embed").innerHTML = 
+        (daysExtension < 10 ? "0" : "") + daysExtension + "d " + 
+        (hoursExtension < 10 ? "0" : "") + hoursExtension + "h " + 
+        (minutesExtension < 10 ? "0" : "") + minutesExtension + "m " + 
+        (secondsExtension < 10 ? "0" : "") + secondsExtension + "s";
+    }
+  }
+
+  setInterval(updateCountdownEmbed, 1000);
+</script>
+
+</body>
+</html>
